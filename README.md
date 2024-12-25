@@ -21,7 +21,7 @@ This project demonsterates the use of ROS to build and control an autonomous vac
    - **Purpose**
      - Manages the robot's movement based on real_time data from the sensors.
  3. **Motor Driver Communication**
-    -**Node:**
+    - **Node:**
      'motor_driver_node'
     - **Functionality:**
       - Subscribes to the control topic (/motor_control) to receive speed and direction commands.
