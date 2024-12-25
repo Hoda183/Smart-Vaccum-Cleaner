@@ -1,6 +1,6 @@
-# > Smart-Vacuum-Cleaner
+#  Smart-Vacuum-Cleaner
 > This project demonsterates the use of ROS to build and control an autonomous vacuum cleaner capable of avoiding obstacles dynamically. Below is an overview of the ROS nodes and their > functionality:
-## > Features
+##  Features
 >> 1. **Obstacle Detection using Ultrasonic Sensor**
 >>> - **Node:**
 >>>>   ultrasonic_sensor_node
@@ -11,7 +11,7 @@
 >>>> - Enables the control system to monitor the environment in real_time.
 >> 2. **Control Node for Decision Making**
 >>>   - **Node:**
->>>>     control_node
+>>>>    ''' control_node '''
 >>>   - **Functionality:**
 >>>>   - Subscribes to the ultrasonic sensor topic (ultrasonic/range) to receive distance readings.
 >>>>   - Monitors the distance values and determines if the robot is approaching an obstacle.
@@ -24,11 +24,11 @@
 >>>   -**Node:**
 >>>>    motor_driver_node
 >>>   - **Functionality:**
->>>>   - Subscribes to the control topic (/motor_control) to receive speed and direction commands.
->>>>   - Adjusts the motor's speed and direction accordingly.
+>>>>   + Subscribes to the control topic (/motor_control) to receive speed and direction commands.
+>>>>   + Adjusts the motor's speed and direction accordingly.
 >>> - **Purpose**
->>>> - Executes movement commands, ensuring smooth operation of the vacuum cleaner.
-## > Workflow
+>>>> + Executes movement commands, ensuring smooth operation of the vacuum cleaner.
+##  Workflow
 >> 1. The **Ultrasonic sensor** continuously puplishes distance readings.
 >> 2. the **control node** monitors these readings and evaluates the proximity of obstacles.
 >> 3. Based on the obstacle's distance:
