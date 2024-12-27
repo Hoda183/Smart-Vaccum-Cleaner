@@ -4,8 +4,8 @@ from turtlesim.msg import Pose
 import math
 
 # Constants
-MAX_SPEED = 60
-TURN_SPEED = 50
+MAX_SPEED = 1
+TURN_SPEED = 1
 WALL_THRESHOLD = 5.0  # Example threshold for walls in the Turtlesim world
 MIN_DISTANCE = 1.0
 TURN_TIME = 2
