@@ -1,5 +1,5 @@
 import rospy
-from std_msgs.msg import Int32MultiArray, Float32
+from std_msgs.msg import Int32MultiArray, Int16
 
 # Constants
 MAX_SPEED = 60
@@ -87,7 +87,7 @@ def control_node():
     # Initialize ROS node
     rospy.init_node('coverage_controller', anonymous=True)
     pub = rospy.Publisher('velocity', Int32MultiArray, queue_size=10)
-    rospy.Subscriber('Range', Float32, range_callback)
+    rospy.Subscriber('/ultrasonic/range', Int16, range_callback)
 
     rate = rospy.Rate(10)
     start_time = rospy.get_time()
