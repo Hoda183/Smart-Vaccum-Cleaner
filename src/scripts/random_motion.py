@@ -18,6 +18,7 @@ MIN_DISTANCE = 40
 MOVING_BACK_TIME = 2
 MIN_TURN_TIME = 0.75
 MAX_TURN_TIME = 1.5
+THRESHOLD = 50
 
 current_state = 'MOVING_FORWARD'
 state_start_time = None
@@ -27,7 +28,7 @@ compare_two = 0
 def ultrasonic_callback(data):
     global ultrasonic_read, last_distance, stable_readings_count
 
-    if abs(data.data - last_distance) > 50:
+    if abs(data.data - last_distance) > THRESHOLD:
         stable_readings_count = 0
         return
 
