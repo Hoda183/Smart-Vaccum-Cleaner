@@ -1,0 +1,94 @@
+#include "ros/ros.h"
+#include "geometry_msgs/Quaternion.h"
+#include <linux/i2c-dev.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <iostream>
+
+#define MPU6050_ADDR 0x68
+#define ACCEL_XOUT_H 0x3B
+#define GYRO_ZOUT_H  0x47
+#define PWR_MGMT_1   0x6B
+
+class MPU6050Node {
+private:
+    int i2c_file;
+    ros::NodeHandle nh;
+    ros::Publisher pub;
+
+public:
+    MPU6050Node() {
+        pub = nh.advertise<geometry_msgs::Quaternion>("/mpu6050_data", 10);
+
+        // Open I2C device
+        i2c_file = open("/dev/i2c-1", O_RDWR);
+        if (i2c_file < 0) {
+            ROS_ERROR("Failed to open the I2C bus.");
+            exit(1);
+        }
+
+        // Configure MPU6050
+        if (ioctl(i2c_file, I2C_SLAVE, MPU6050_ADDR) < 0) {
+            ROS_ERROR("Failed to connect to the sensor.");
+            exit(1);
+        }
+
+        // Wake up MPU6050
+        writeByte(PWR_MGMT_1, 0x00);
+    }
+
+    ~MPU6050Node() {
+        close(i2c_file);
+    }
+
+    void writeByte(uint8_t reg, uint8_t value) {
+        uint8_t buffer[2] = {reg, value};
+        if (write(i2c_file, buffer, 2) != 2) {
+            ROS_ERROR("Failed to write to the I2C bus.");
+        }
+    }
+
+    int16_t readWord(uint8_t reg) {
+        uint8_t buffer[2];
+        if (write(i2c_file, &reg, 1) != 1 || read(i2c_file, buffer, 2) != 2) {
+            ROS_ERROR("Failed to read from the I2C bus.");
+            return 0;
+        }
+        return (buffer[0] << 8) | buffer[1];
+    }
+
+    void computeAndPublish() {
+        int16_t accel_x = readWord(ACCEL_XOUT_H);
+        int16_t accel_y = readWord(ACCEL_XOUT_H + 2);
+        int16_t gyro_z = readWord(GYRO_ZOUT_H);
+
+        // Scale the raw data
+        double position_x = accel_x * 0.0001;  // Example scaling factor
+        double position_y = accel_y * 0.0001;
+        double rotation_z = gyro_z * 0.01;    // Example scaling factor
+
+        // Publish data
+        geometry_msgs::Quaternion msg;
+        msg.x = position_x;
+        msg.y = position_y;
+        msg.z = rotation_z;
+        msg.w = 0;  // Placeholder
+        pub.publish(msg);
+    }
+
+    void spin() {
+        ros::Rate rate(10);  // 10 Hz
+        while (ros::ok()) {
+            computeAndPublish();
+            ros::spinOnce();
+            rate.sleep();
+        }
+    }
+};
+
+int main(int argc, char **argv) {
+    ros::init(argc, argv, "mpu6050_node");
+    MPU6050Node node;
+    node.spin();
+    return 0;
+}
