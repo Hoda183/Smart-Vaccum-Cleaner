@@ -1,0 +1,55 @@
+<launch>
+    <!-- Package 1 -->
+        pkg="package1"
+        type="serial_node.py"     <!-- rosserial Python node -->
+        name="rosserial_esp_server"
+        output="screen">
+        <param name="serial_port" value="/dev/ttyUSB0"/>  <!-- Adjust to your ESP serial port -->
+        <param name="baud" value="115200"/>                <!-- Match the baud rate to the ESP sketch -->
+    </node>
+
+    <!-- Package 2 -->
+    <node 
+        pkg="package2" 
+        type="random_motion.py" 
+        name="node1_pkg2" 
+        output="screen">
+    </node>
+    <node 
+        pkg="package2" 
+        type="control_mode_server.py" 
+        name="node2_pkg2" 
+        output="screen">
+    </node>
+    <node 
+        pkg="package2" 
+        type="control_mode_client.py" 
+        name="node3_pkg2" 
+        output="screen">
+    </node>
+    
+    <!-- Package 3 -->
+    <node 
+        pkg="package3" 
+        type="joy.py" 
+        name="node1_pkg3" 
+        output="screen">
+    </node>
+
+    <!-- Package 4 -->
+    <node 
+        pkg="package4" 
+        type="socket.py" 
+        name="node1_pkg4" 
+        output="screen">
+    </node>
+ 
+ <!-- Package 5-->
+    <node 
+        pkg="package5" 
+        type="Webapp.py" 
+        name="web_server" 
+        output="screen">
+    </node>
+    
+</launch>
