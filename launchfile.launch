@@ -1,55 +1,29 @@
 <launch>
-    <!-- Package 1 -->
-        pkg="package1"
-        type="serial_node.py"     <!-- rosserial Python node -->
-        name="rosserial_esp_server"
-        output="screen">
-        <param name="serial_port" value="/dev/ttyUSB0"/>  <!-- Adjust to your ESP serial port -->
-        <param name="baud" value="115200"/>                <!-- Match the baud rate to the ESP sketch -->
-    </node>
-
-    <!-- Package 2 -->
-    <node 
-        pkg="package2" 
-        type="random_motion.py" 
-        name="node1_pkg2" 
-        output="screen">
-    </node>
-    <node 
-        pkg="package2" 
-        type="control_mode_server.py" 
-        name="node2_pkg2" 
-        output="screen">
-    </node>
-    <node 
-        pkg="package2" 
-        type="control_mode_client.py" 
-        name="node3_pkg2" 
-        output="screen">
-    </node>
-    
-    <!-- Package 3 -->
-    <node 
-        pkg="package3" 
-        type="joy.py" 
-        name="node1_pkg3" 
+    <!-- rosserial_server -->
+     <node pkg="rosserial_server" 
+        type="socket_node" 
+        name="rosserial_server_socket_node" 
         output="screen">
     </node>
 
-    <!-- Package 4 -->
-    <node 
-        pkg="package4" 
-        type="socket.py" 
-        name="node1_pkg4" 
+    <!-- rosbridge_websocket -->
+    <node pkg="rosbridge_server" 
+        type="rosbridge_websocket" 
+        name="rosbridge_websocket" 
+        output="screen">
+        <param name="param_websocket_port" value="9090" />
+    </node>
+    <!-- Run an Ubuntu command -->
+
+   <node pkg="learn_controller"
+        type="start_server.bash" name="start_server"
+        output="screen"
+    />
+   <!-- ps3 node  -->
+
+    <node pkg="joy" 
+        type="joy_node" 
+        name="joy_node" 
         output="screen">
     </node>
- 
- <!-- Package 5-->
-    <node 
-        pkg="package5" 
-        type="Webapp.py" 
-        name="web_server" 
-        output="screen">
-    </node>
-    
 </launch>
