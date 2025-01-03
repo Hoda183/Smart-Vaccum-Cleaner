@@ -7,7 +7,6 @@ const ros = new ROSLIB.Ros({
 ros.on("connection", () => {
   document.body.style.backgroundColor = "#213555";
   vaccumButton.style.backgroundColor = "#adff2f";
-  connected = true;
   console.log("Ros Master connected");
 });
 ros.on("error", () => {
@@ -45,7 +44,9 @@ ultrasonicTopic.subscribe((message) => {
 setInterval((_) => {
   timeout = setTimeout(function () {
     if (connected) {
+      vacState = false;
       vaccumButton.style.backgroundColor = "#ffffff";
+      vaccumButton.textContent = "OFF";
       renderMenu(0);
       console.log("esp disconnected");
       connected = false;
@@ -56,8 +57,10 @@ ultrasonicTopic.subscribe(function () {
   clearTimeout(timeout);
   if (!connected) {
     connected = true;
+    console.log("esp reconnected");
     renderMenu(1);
-    vaccumButton.style.backgroundColor = "#adff2f";
+    if (vacState) vaccumButton.style.backgroundColor = "#adff2f";
+    else vaccumButton.style.backgroundColor = "#c62300";
   }
 });
 // ros api
@@ -193,4 +196,5 @@ manualControlMenu.addEventListener("click", (e) => {
 });
 
 // start the app
-renderMenu(1);
+renderMenu(0);
+
