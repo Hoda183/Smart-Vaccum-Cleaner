@@ -2,25 +2,31 @@
   font-family: "Roboto";
   src: url("assets/fonts/Roboto/Roboto-Bold.ttf");
 }
+/* prevent selection */
 * {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
 }
+/* general rules */
 .hidden {
   display: none !important;
 }
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 body {
   font-family: "Roboto";
-  max-height: 100vh;
   max-width: 100vw;
+  overflow-x: hidden;
   padding: 0;
   margin: 0;
-  /* overflow: hidden; */
   background-color: #bcccdc;
-  /* color: white; */
   text-align: center;
   transition: color 1s;
+  flex-direction: column;
 }
 .header {
   height: 10vh;
@@ -29,24 +35,16 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 .modes {
-  /* height: 100%; */
   width: 70%;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 .mode {
   text-transform: capitalize;
   font-size: 3rem;
   height: 10rem;
-  /* width: 10rem; */
   width: 80%;
   border: 1px solid black;
   border-radius: 10px;
@@ -66,6 +64,130 @@ body {
 .red {
   background-color: #c62300;
 }
+
+.loader {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  transform: rotate(45deg);
+}
+.loading_div {
+  flex-direction: column;
+  height: 50vh;
+  gap: 7rem;
+}
+.loader-square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  margin: 2px;
+  border-radius: 0px;
+  background: white;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  animation: square-animation 10s ease-in-out infinite both;
+}
+
+.loader-message {
+  color: white;
+  font-size: 2.5rem;
+}
+
+.manual_control {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+}
+.arrow_container {
+  min-height: 40vh;
+  width: 70vw;
+  /* background-color: #fff; */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  transform: rotate(90deg);
+}
+.arrow--key {
+  height: 15rem;
+  width: 15rem;
+  background-color: #ddd;
+  font-size: 10rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.arrow--key:hover {
+  background-color: #16c47f;
+}
+.arrow--up {
+  grid-area: 1/2/2/3;
+  transform: rotate(90deg);
+}
+.arrow--down {
+  grid-area: 3/2/4/3;
+  transform: rotate(270deg);
+}
+.arrow--right {
+  grid-area: 2/3/3/4;
+  transform: rotate(180deg);
+}
+.arrow--left {
+  grid-area: 2/1/3/2;
+}
+.sensor_readings {
+  height: 45vh;
+  flex-direction: column;
+
+  width: 80vw;
+  background-color: #222;
+  transform: rotate(90deg);
+  border-radius: 5px;
+}
+.sensor_readings h2 {
+  font-size: 5rem;
+  color: white;
+}
+.back {
+  position: absolute;
+  bottom: -8%;
+  right: -3%;
+  height: 10rem;
+  width: 13rem;
+  background-color: #4c585b;
+  transform: rotate(90deg);
+  font-size: 5rem;
+  box-sizing: border-box;
+  color: white;
+  cursor: pointer;
+}
+.vaccum_control {
+  display: flex;
+  width: 80%;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem 0;
+}
+.vaccum_title {
+  font-size: 3rem;
+  color: #faffc5;
+}
+.vaccum_button {
+  height: 7rem;
+  width: 20rem;
+  font-size: 2rem;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: background-color 1s;
+  cursor: pointer;
+}
+
 /* From Uiverse.io by ZacharyCrespin */
 @keyframes square-animation {
   0% {
@@ -153,40 +275,6 @@ body {
     top: 0;
   }
 }
-
-.loader {
-  position: relative;
-  width: 96px;
-  height: 96px;
-  transform: rotate(45deg);
-}
-.loading_div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 50vh;
-  gap: 7rem;
-}
-.loader-square {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 28px;
-  height: 28px;
-  margin: 2px;
-  border-radius: 0px;
-  background: white;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  animation: square-animation 10s ease-in-out infinite both;
-}
-
-.loader-message {
-  color: white;
-  font-size: 2.5rem;
-}
 .loader-square:nth-of-type(0) {
   animation-delay: 0s;
 }
@@ -218,88 +306,4 @@ body {
 .loader-square:nth-of-type(7) {
   animation-delay: -10s;
 }
-.manual_control {
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  /* background-color: #fff; */
 
-  /* background-color: green; */
-}
-.arrow_container {
-  min-height: 40vh;
-  width: 70vw;
-  /* background-color: #fff; */
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  transform: rotate(90deg);
-}
-.arrow--key {
-  height: 15rem;
-  width: 15rem;
-  background-color: #ddd;
-  font-size: 10rem;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.arrow--key:hover {
-  background-color: #16c47f;
-}
-.arrow--up {
-  grid-area: 1/2/2/3;
-  transform: rotate(90deg);
-}
-.arrow--down {
-  grid-area: 3/2/4/3;
-  transform: rotate(270deg);
-}
-.arrow--right {
-  grid-area: 2/3/3/4;
-  transform: rotate(180deg);
-}
-.arrow--left {
-  grid-area: 2/1/3/2;
-}
-.sensor_readings {
-  height: 45vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  width: 80vw;
-  background-color: #222;
-  transform: rotate(90deg);
-  border-radius: 5px;
-  /* padding-top: 10rem; */
-  /* padding-left: 5rem; */
-  /* box-sizing: border-box; */
-}
-.sensor_readings h2 {
-  font-size: 5rem;
-  color: white;
-}
-.back {
-  position: absolute;
-  bottom: -8%;
-  right: -3%;
-  height: 10rem;
-  width: 13rem;
-  background-color: #4c585b;
-  /* border-radius: 50%; */
-  display: flex;
-  /* line-height: 80%; */
-  justify-content: center;
-  align-items: center;
-  transform: rotate(90deg);
-  font-size: 5rem;
-  box-sizing: border-box;
-  color: white;
-  cursor: pointer;
-}

@@ -1,30 +1,126 @@
+"use strict";
+// ros configuration
 const ros = new ROSLIB.Ros({
-  // url: "ws://192.168.1.20:9090", // Replace with your ROSBridge server's address
-  url: "ws://10.42.0.1:9090", // Replace with your ROSBridge server's address
-  // url: "ws://0.0.0.0.:9090", // Replace with your ROSBridge server's address
+  url: "ws://10.42.0.1:9090",
 });
 
 ros.on("connection", () => {
   document.body.style.backgroundColor = "#213555";
+  vaccumButton.style.backgroundColor = "#adff2f";
+  connected = true;
   console.log("Ros Master connected");
 });
-ros.on("error", (error) => {
+ros.on("error", () => {
   document.body.style.backgroundColor = "#C62E2E";
 });
 
 const topic = new ROSLIB.Topic({
   ros: ros,
-  name: "/ultrasonic/range", // Replace with your topic name
-  messageType: "std_msgs/Int16", // The message type published on the topic
+  name: "/ultrasonic/range",
+  messageType: "std_msgs/Int16",
 });
-let connection = false;
+
+const controlModeService = new ROSLIB.Service({
+  ros: ros,
+  name: "/control_mode",
+  serviceType: "control_mode_pkg/ControlMode",
+});
+
+const ultrasonicTopic = new ROSLIB.Topic({
+  ros: ros,
+  name: "/ultrasonic/range",
+  message: "std_msgs/Int32",
+});
+
+const motorsSpeedTopic = new ROSLIB.Topic({
+  ros: ros,
+  name: "/motors_speed",
+  messageType: " Int32MultiArray",
+});
+
+ultrasonicTopic.subscribe((message) => {
+  ultrasonicReadings.textContent = `${message.data} cm`;
+});
+// checking if epsnode is connected
+setInterval((_) => {
+  timeout = setTimeout(function () {
+    if (connected) {
+      vaccumButton.style.backgroundColor = "#ffffff";
+      renderMenu(0);
+      console.log("esp disconnected");
+      connected = false;
+    }
+  }, 1500);
+}, 1500);
+ultrasonicTopic.subscribe(function () {
+  clearTimeout(timeout);
+  if (!connected) {
+    connected = true;
+    renderMenu(1);
+    vaccumButton.style.backgroundColor = "#adff2f";
+  }
+});
+// ros api
+const serviceModeControl = function (mode) {
+  // Create a request object with the mode parameter set to mode value
+  const request = new ROSLIB.ServiceRequest({
+    mode,
+  });
+  controlModeService.callService(
+    request,
+    (result) => {
+      console.log("Service Response:", result);
+    },
+    (error) => {
+      console.error("Service Call Failed:", error);
+    }
+  );
+};
+
+const publishMotorSpeed = function (motorsData) {
+  let motorsSpeedData = new ROSLIB.Message({
+    data: motorsData,
+  });
+  motorsSpeedTopic.publish(motorsSpeedData);
+};
+// elements storage
+const vaccumButton = document.querySelector(".vaccum_button");
 const content = document.querySelector(".content");
 const modesMenu = document.querySelector(".modes");
 const manualControlMenu = content.querySelector(".manual_control");
 const loadingMenu = content.querySelector(".loading_div");
 const menus = content.querySelectorAll(".menu");
 const ultrasonicReadings = document.querySelector(".readings--value");
-console.log(content, modesMenu, manualControlMenu, loadingMenu);
+
+//  variables
+let connected = false;
+let leftSpeed, rightSpeed, motorsInterval;
+let motorsCount = 0;
+let vacState = true;
+let timeout;
+
+// functions
+const hideMenus = function () {
+  menus.forEach((e) => e.classList.add("hidden"));
+};
+const renderMenu = function (mode = 0) {
+  hideMenus();
+  switch (mode) {
+    case 0: // default menu
+      loadingMenu.classList.remove("hidden");
+      break;
+    case 1: // modes menu
+      modesMenu.classList.remove("hidden");
+      break;
+    case 2: //keyboard
+      if (window.screen.width < 400)
+        manualControlMenu.classList.remove("hidden");
+      else modesMenu.classList.remove("hidden");
+      break;
+  }
+};
+
+// handlers
 modesMenu.addEventListener("click", function (e) {
   const targetEl = e.target.closest(".mode");
   if (!targetEl) return;
@@ -35,55 +131,22 @@ modesMenu.addEventListener("click", function (e) {
   const mode = +targetEl.dataset.mode;
   if (mode === 1) renderMenu(2);
   if (mode != 0) targetEl.classList.add("active");
-  const controlModeService = new ROSLIB.Service({
-    ros: ros,
-    name: "/control_mode", // The name of the service
-    serviceType: "control_mode_pkg/ControlMode", // The type of the service
-  });
+  serviceModeControl(mode);
+});
 
-  // Create a request object with the mode parameter set to 1
-  console.log(mode);
-  const request = new ROSLIB.ServiceRequest({
-    mode, // Set mode to 1
-  });
-  controlModeService.callService(
-    request,
-    (result) => {
-      console.log("Service Response:", result); // Log the response
-    },
-    (error) => {
-      console.error("Service Call Failed:", error); // Log any error
-    }
-  );
-});
-const hideMenus = function () {
-  menus.forEach((e) => e.classList.add("hidden"));
-};
-const renderMenu = function (mode = 0) {
-  console.log(mode);
-  hideMenus();
-  switch (mode) {
-    case 0:
-      loadingMenu.classList.remove("hidden");
-      break;
-    case 1: // modes menu
-      modesMenu.classList.remove("hidden");
-      break;
-    case 2: //keyboard
-      manualControlMenu.classList.remove("hidden");
-      break;
+vaccumButton.addEventListener("click", function (e) {
+  if (!connected) return;
+  if (vacState) {
+    vaccumButton.style.backgroundColor = "#c62300";
+    vaccumButton.textContent = "OFF";
+    vacState = false;
+  } else {
+    vaccumButton.style.backgroundColor = "#adff2f";
+    vaccumButton.textContent = "ON";
+    vacState = true;
   }
-};
-const ultrasonicTopic = new ROSLIB.Topic({
-  ros: ros,
-  name: "/ultrasonic/range",
-  message: "std_msgs/Int32",
 });
-ultrasonicTopic.subscribe((message) => {
-  ultrasonicReadings.textContent = `${message.data} cm`;
-  console.log("hello");
-});
-let leftSpeed, rightSpeed, motorsInterval;
+
 manualControlMenu.addEventListener("touchstart", (e) => {
   const el = e.target.closest(".arrow--key");
   if (!el) return;
@@ -91,29 +154,25 @@ manualControlMenu.addEventListener("touchstart", (e) => {
   if (el.classList.contains("arrow--up")) {
     leftSpeed = 255;
     rightSpeed = 255;
-    console.log("up");
   }
   if (el.classList.contains("arrow--down")) {
     leftSpeed = -255;
     rightSpeed = -255;
-    console.log("down");
   }
   if (el.classList.contains("arrow--left")) {
     leftSpeed = 0;
     rightSpeed = 255;
-    console.log("left");
   }
   if (el.classList.contains("arrow--right")) {
     leftSpeed = 255;
     rightSpeed = 0;
-    console.log("right");
   }
   motorsInterval = setInterval(
     (_) => publishMotorSpeed([leftSpeed, rightSpeed]),
     100
   );
 });
-let motorsCount = 0;
+
 manualControlMenu.addEventListener("touchend", (e) => {
   const el = e.target.closest(".arrow--key");
   if (!el) return;
@@ -126,44 +185,12 @@ manualControlMenu.addEventListener("touchend", (e) => {
     }
   }, 100);
 });
+
 manualControlMenu.addEventListener("click", (e) => {
   const el = e.target.closest(".back");
   if (!el) return;
   renderMenu(1);
 });
-const motorsSpeedTopic = new ROSLIB.Topic({
-  ros: ros,
-  name: "/motors_speed",
-  messageType: " Int32MultiArray", // Change message type if needed
-});
-const publishMotorSpeed = function (motorsData) {
-  let motorsSpeedData = new ROSLIB.Message({
-    data: motorsData, // Replace with your message content
-  });
-  motorsSpeedTopic.publish(motorsSpeedData);
-};
 
-// checking if epsnode is connected
-let timeout;
-let connected = false;
-ultrasonicTopic.subscribe(function (message) {
-  clearTimeout(timeout);
-  if (!connected) {
-    renderMenu(1);
-    connected = true;
-  }
-});
-
-setInterval((_) => {
-  timeout = setTimeout(function () {
-    if (connected) {
-      renderMenu(0);
-      console.log("esp disconnected");
-      connected = false;
-    }
-  }, 1500);
-}, 1500);
-// console.log(timeout);
-// start excution
-// renderLoading();
-renderMenu(0);
+// start the app
+renderMenu(1);
