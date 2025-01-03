@@ -37,6 +37,21 @@ const motorsSpeedTopic = new ROSLIB.Topic({
   messageType: " Int32MultiArray",
 });
 
+//New state topic
+const vacuumStateTopic = new ROSLIB.Topic({
+  ros: ros,
+  name: "/vaccum_state",
+  messageType: "std_msgs/Bool",
+});
+// Function to publish vacuum state
+function publishVacuumState(state) {
+  const message = new ROSLIB.Message({
+    data: state, // Publish true for ON and false for OFF
+  });
+  vacuumStateTopic.publish(message);
+  console.log(`Vacuum state published: ${state ? "ON" : "OFF"}`);
+}
+
 ultrasonicTopic.subscribe((message) => {
   ultrasonicReadings.textContent = `${message.data} cm`;
 });
@@ -138,18 +153,23 @@ modesMenu.addEventListener("click", function (e) {
 });
 
 vaccumButton.addEventListener("click", function (e) {
-  if (!connected) return;
+  if (!connected){
+    console.log("Not connected to ROS. Cannot toggle vacuum state.");
+    return;
+  }
+  
   if (vacState) {
     vaccumButton.style.backgroundColor = "#c62300";
     vaccumButton.textContent = "OFF";
     vacState = false;
-  } else {
+  } 
+  else {
     vaccumButton.style.backgroundColor = "#adff2f";
     vaccumButton.textContent = "ON";
     vacState = true;
   }
+  publishVacuumState(vacState);
 });
-
 manualControlMenu.addEventListener("touchstart", (e) => {
   const el = e.target.closest(".arrow--key");
   if (!el) return;
