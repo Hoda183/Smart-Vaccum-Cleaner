@@ -3,7 +3,6 @@
 
 // Wifi
 #include <WiFi.h>  // For ESP32 Wi-Fi library
-#include <geometry_msgs/Twist.h>
 
 
 
@@ -73,7 +72,7 @@ void motorSpeedCallback(const std_msgs::Int32MultiArray& msg) {
 }
 
 
-// Callback function for the 'vacuum_state' topic
+// Callback function for the 'vaccum_state' topic
 void vaccumStateCallback(const std_msgs::Bool& msg) {
   if (msg.data) {
     digitalWrite(GPIO_PIN, HIGH); // Turn GPIO 25 ON
@@ -84,8 +83,8 @@ void vaccumStateCallback(const std_msgs::Bool& msg) {
      }
 }
 
-// Subscriber for the 'vacuum_state' topic
-ros::Subscriber<std_msgs::Bool> vacuumStateSub("vacuum_state", vaccumStateCallback);
+// Subscriber for the 'vaccum_state' topic
+ros::Subscriber<std_msgs::Bool> vaccumStateSub("vaccum_state", vaccumStateCallback);
 
 
 ros::Subscriber<std_msgs::Int32MultiArray> motorSpeedSub("motors_speed", &motorSpeedCallback);
@@ -143,8 +142,8 @@ void setup() {
     // advertise topics
     nh.advertise(pub_ultrasonic);
 
-    // Subscribe to the 'vacuum_state' topic
-    nh.subscribe(vacuumStateSub);
+    // Subscribe to the 'vaccum_state' topic
+    nh.subscribe(vaccumStateSub);
 
 
     // motor driver
