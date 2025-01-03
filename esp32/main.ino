@@ -27,9 +27,9 @@
 #define IN3 21
 #define IN4 22
 
-
-
-
+// switch 
+#include <std_msgs/Bool.h>
+#define GPIO_PIN 25
 
 
 
@@ -91,6 +91,22 @@ void motorSpeedCallback(const std_msgs::Int32MultiArray& msg) {
   }
 }
 
+
+// Callback function for the 'vacuum_state' topic
+void vaccumStateCallback(const std_msgs::Bool& msg) {
+  if (msg.data) {
+    digitalWrite(GPIO_PIN, HIGH); // Turn GPIO 25 ON
+    }
+  else {
+    digitalWrite(GPIO_PIN, LOW); // Turn GPIO 25 OFF
+    
+     }
+}
+
+// Subscriber for the 'vacuum_state' topic
+ros::Subscriber<std_msgs::Bool> vacuumStateSub("vacuum_state", vaccumStateCallback);
+
+
 ros::Subscriber<std_msgs::Int32MultiArray> motorSpeedSub("motors_speed", &motorSpeedCallback);
 
 WiFiClient wifiClient;  // Wi-Fi client for socket connection
@@ -113,6 +129,9 @@ void setup() {
   pinMode(EN1, OUTPUT);
   pinMode(EN2, OUTPUT);
 
+  // Switch configs
+  pinMode(GPIO_PIN, OUTPUT);
+  digitalWrite(GPIO_PIN, LOW); // Default state OFF
 
 
   // WIFI configs
@@ -143,7 +162,8 @@ void setup() {
     // advertise topics
     nh.advertise(pub_ultrasonic);
 
-
+    // Subscribe to the 'vacuum_state' topic
+    nh.subscribe(vacuumStateSub);
 
 
     // motor driver
@@ -184,4 +204,3 @@ void loop() {
   
   // delay(10); 
 }
-
