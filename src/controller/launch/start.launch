@@ -1,0 +1,29 @@
+<launch>
+    <!-- rosserial_server -->
+     <node pkg="rosserial_server" 
+        type="socket_node" 
+        name="rosserial_server_socket_node" 
+        output="screen">
+    </node>
+
+    <!-- rosbridge_websocket -->
+    <node pkg="rosbridge_server" 
+        type="rosbridge_websocket" 
+        name="rosbridge_websocket" 
+        output="screen">
+        <param name="param_websocket_port" value="9090" />
+    </node>
+    
+    <!-- Run an Ubuntu command -->
+    <node pkg="control_mode_pkg"
+            type="control_mode_server.py"
+            name="control_mode_server.py"
+            output="screen">
+    </node>
+
+   <node pkg="controller"
+        type="start_server.bash" name="start_server"
+        output="screen"
+    />
+
+</launch>

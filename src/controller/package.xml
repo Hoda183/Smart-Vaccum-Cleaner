@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>controller</name>
+  <version>0.0.1</version>
+  <description>The controller package</description>
+  
+  <author email="mohmed.ayman11@gmail.com">zeroStudent</author>
+  <maintainer email="mohmed.ayman11@gmail.com">zeroStudent</maintainer>
+  <license>MIT</license>
+  
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>rospy</depend>
+  <depend>pygame</depend>
+  <depend>pynput</depend>
+  <depend>std_msgs</depend>
+
+</package>
+
