@@ -8,7 +8,7 @@
   <maintainer email="mohmed.ayman11@gmail.com">zeroStudent</maintainer> 
   <maintainer email="es-huda.essa2026@alexu.edu.eg">Hoda</maintainer> 
 
-   <license>TODO</license>
+   <license>MIT</license>
 
 
   <buildtool_depend>catkin</buildtool_depend>
