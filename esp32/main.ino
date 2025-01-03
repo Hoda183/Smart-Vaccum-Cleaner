@@ -33,34 +33,16 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 unsigned long previousMillis = 0; // Stores the last time the loop ran
 const unsigned long interval = 100; // Interval in milliseconds
 
 
 
-const char* ssid     = "zeroMachine";  // Replace with your Wi-Fi SSID
-const char* password = "helloworld";  // Replace with your Wi-Fi password
+const char* ssid     = "zeroMachine";  
+const char* password = "helloworld";  
 // Set the rosserial socket server IP address (ROS master IP)
-IPAddress server(10, 42, 0, 1);  // Replace with your ROS Master's IP
+IPAddress server(10, 42, 0, 1); 
 
-// const char* ssid     = "Home";  // Replace with your Wi-Fi SSID
-// const char* password = "notwelcome0000";  // Replace with your Wi-Fi password
-// IPAddress server(192, 168, 1, 20);  // Replace with your ROS Master's IP
 
 // Set the rosserial socket server port (default: 11411)
 const uint16_t serverPort = 11411;
@@ -83,7 +65,6 @@ int right_motor_speed = 0;
 
 // ROS subscriber callback
 void motorSpeedCallback(const std_msgs::Int32MultiArray& msg) {
-  // if (msg.data.size() == 2) { // Ensure two values are received
     if (msg.data_length == 2) { // Ensure two values are received
     left_motor_speed = msg.data[0];
     right_motor_speed = msg.data[1];
@@ -154,8 +135,8 @@ void setup() {
   if (wifiClient.connect(server, serverPort)) {
 
     // Use rosserial's hardware interface with WiFiClient
-    nh.getHardware()->setConnection(server, serverPort);  // Pass WiFiClient here
-    nh.initNode();  // Initialize ROS node
+    nh.getHardware()->setConnection(server, serverPort); 
+    nh.initNode();
 
 
 
@@ -179,16 +160,15 @@ void setup() {
 
 void loop() {
   if (nh.connected()) {
-    unsigned long currentMillis = millis(); // Get the current time
-    // ultrasonic_msg.data = readUltrasonicDistance(); 
-    // pub_ultrasonic.publish(&ultrasonic_msg); //puplish the message on the topic"pup_ultrasonic
+    unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis; // Update the time
+    previousMillis = currentMillis;
 
     // Read ultrasonic distance
     ultrasonic_msg.data = readUltrasonicDistance(); 
-    // ultrasonic_msg.data = 1; 
-    pub_ultrasonic.publish(&ultrasonic_msg); // Publish the message on the topic "pub_ultrasonic"
+
+    // Publish the message on the topic "pub_ultrasonic"
+    pub_ultrasonic.publish(&ultrasonic_msg); 
 
   }
 
@@ -198,9 +178,5 @@ void loop() {
   }
 
   nh.spinOnce();  // Call rosserial processing
-  
 
-  // Check if the interval has passed
-  
-  // delay(10); 
 }
