@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>smartVacuumCleaner</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body class="flex-center">
+    <div class="vaccum_control">
+      <div class="vaccum_title">Vaccum Mode</div>
+      <div class="vaccum_button flex-center">On</div>
+    </div>
+    <div class="content flex-center">
+      <div class="modes menu flex-center">
+        <div class="mode" data-mode="1">keyboard</div>
+        <div class="mode" data-mode="2">ps3</div>
+        <div class="mode" data-mode="3">autonomus</div>
+        <div class="mode red" data-mode="0">Stop</div>
+      </div>
+      <div class="manual_control menu">
+        <div class="arrow_container">
+          <div class="arrow--key arrow--up button"><</div>
+          <div class="arrow--key arrow--down button"><</div>
+          <div class="arrow--key arrow--left button"><</div>
+          <div class="arrow--key arrow--right button"><</div>
+        </div>
+        <div class="sensor_readings flex-center">
+          <h2 class="readings--title">Ultrasonic Readings</h2>
+          <h2 class="readings--value">xxx</h2>
+        </div>
+        <span class="back button flex-center">➜</span>
+      </div>
+      <!-- /* From Uiverse.io by ZacharyCrespin */ -->
+      <div class="loading_div menu flex-center">
+        <div class="loader">
+          <div class="loader-square"></div>
+          <div class="loader-square"></div>
+          <div class="loader-square"></div>
+          <div class="loader-square"></div>
+          <div class="loader-square"></div>
+          <div class="loader-square"></div>
+          <div class="loader-square"></div>
+        </div>
+        <div class="loader-message">Waiting Robot To Connect</div>
+      </div>
+    </div>
+  </body>
+</html>
