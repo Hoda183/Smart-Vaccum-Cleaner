@@ -2,17 +2,17 @@
 ![Preview Image](https://github.com/user-attachments/assets/9cf2ec3e-eb46-42fa-8bce-25d9f6d64aed)
 
 
-This project demonsterates the use of ROS to build and control an autonomous vacuum cleaner capable of avoiding obstacles dynamically. Below is an overview of the ROS nodes and their functionality:
+This project demonsterates the use of ROS to build and control an autonomous vacuum cleaner capable of avoiding obstacles dynamically. Below is an overview of the ROS nodes and their functionality
 
 ## Installation
-
+<ins>Ros noetic is used in this project</ins>
 1. start the catkin workspace by `catkin_make`
 2. install rosserial
     
     ```
     sudo apt update
-    sudo apt install ros-<ros-distro>-rosserial
-    sudo apt install ros-<ros-distro>-rosserial-arduino
+    sudo apt install ros-noetic-rosserial
+    sudo apt install ros-noetic-rosserial-arduino
     ```
     
 3. install rosbridge
