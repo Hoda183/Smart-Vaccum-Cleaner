@@ -115,3 +115,16 @@ Main Menu             | Keyboard Menu
 3. Based on the obstacle's distance:
     - Commands to slow down or stop are sent to the **motor driver**.
 4. The **motor driver node** adjusts the robot's movement accordingly.
+
+## Contribution
+if you're interested in contributing to this project here are the things that need to be improved:
+
+### Software
+1. Create mode to Autonmus mode to move in zigzag line using IMU (MPU6050)
+       ![zigzag line](https://github.com/user-attachments/assets/0527c004-843d-4100-b1a1-7929af341e31)
+2. Make the keyboard menu flexablie to Work on both Desktop and tablet screens 
+3. Enchance the code of the [Ps3 controller node](https://github.com/Hoda183/Smart-Vaccum-Cleaner/blob/main/src/controller/scripts/ps3_motors.py)
+
+### Mechanical Design
+1. Adjust the suction box to blalnce the center of mass
+
