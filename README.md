@@ -42,7 +42,8 @@ on this step it will start :
     - rosserial server (for comunnicating between ROS master and ESP32)
     - rosbridge_websocket on port 8080 (for communcating between ROS master and web application)
     - control_mode server (used to control the mode of the robot either manual control or autonomous)
-4. open localhost link on port 8080
+4. replace the ros_web in [bash file](https://github.com/Hoda183/Smart-Vaccum-Cleaner/blob/main/src/controller/start_server.bash) with your absolute ros web server's path
+5. open localhost link on port 8080
 
 ## Hardware
 
